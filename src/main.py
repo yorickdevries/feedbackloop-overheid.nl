@@ -189,7 +189,7 @@ def piwik_events():
     
     # the #occurences of the connection should be higher than the threshold to be incorporated in the graph
     # 1 or 2
-    threshold = 100
+    threshold = 50
     G_edges_orig = {}
     
     for elem in objlist:
@@ -205,8 +205,9 @@ def piwik_events():
     
     for elem in G_edges_orig:
         weigth =  G_edges_orig[elem]
-        if weigth > threshold:
+        if weigth > threshold and elem[0] != "" and elem[1] != "" and elem[0] != elem[1]:
             G_edges.append((elem[0], elem[1], weigth))
+
     
     # create a graph from the distance matrix
     G = nx.DiGraph()
@@ -219,6 +220,22 @@ def piwik_events():
     
     print("Graph made:", len(G.nodes), len(G.edges))
     
+    
+    # add attributes
+    '''
+    cluster_dict = read_motifs.cluster_dict()
+    nx.set_node_attributes(graph, cluster_dict)
+    nx.set_node_attributes(graph, gene_dict)
+
+    # draw the graph
+    nx.draw(graph, with_labels=True, font_weight='bold')
+    plt.show()
+    '''
+
+    # save the graph to files
+    nx.write_gml(G, './graph.gml')
+    nx.write_graphml(G, './graph.graphml')
+
     
     
     
